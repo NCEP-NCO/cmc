@@ -1,0 +1,49 @@
+#!/bin/bash
+
+date
+export PS4=' $SECONDS + '
+set -x
+
+export DATA=${DATA:-${DATAROOT:?}/${jobid}}
+mkdir -p $DATA
+cd $DATA
+
+export pgmout=OUTPUT.$$
+
+export cycle=${cycle:-t${cyc}z}
+
+setpdy.sh
+. ./PDY
+
+export NET=${NET:-cmc}
+export RUN=${RUN:-cmc}
+
+export USHcmc=$HOMEcmc/ush
+export FIXcmc=$HOMEcmc/fix
+
+export DCOM=${DCOM:-${DCOMROOT:?}/${PDY}/wgrbbul/${NET}}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${cmc_ver})/${RUN}.${PDY}}
+export COMOUTnawips=${COMOUTnawips:-${COMOUT}/gempak}
+
+if [ "$SENDCOM" = YES ]; then
+    mkdir -p $COMOUT $COMOUTnawips
+fi
+
+
+env
+
+${HOMEcmc:?}/scripts/excmc_gempak.sh
+export err=$?;err_chk
+
+echo "Job $job has completed normally."
+
+if [ -e $pgmout ]; then
+    cat $pgmout
+fi
+
+if [ "$KEEPDATA" != YES ]; then
+    cd $DATAROOT
+    rm -rf $DATA
+fi
+
+date
