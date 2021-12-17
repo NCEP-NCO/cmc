@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 
-cpreq ${FIXcmc}/nagrib_tables/* $DATA  # directory containing nagrib index tables
+cpreq ${FIXcmc}/* $DATA  # directory containing nagrib index tables
 
 if [ -z "$RUN" -o -z "$COMOUT" -o -z "$COMOUTnawips" ]; then
     msg="One or more required parameters have not been defined in excmc_generate_gempak.sh"
